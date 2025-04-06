@@ -3,10 +3,10 @@ package secret
 import (
 	"encoding/base64"
 	"fmt"
-	"time"
 
 	"github.com/google/uuid"
 	"github.com/infraboard/devops/cmdb/resource"
+	"github.com/infraboard/devops/pkg/model"
 	"github.com/infraboard/mcube/v2/crypto/cbc"
 	"github.com/infraboard/mcube/v2/tools/pretty"
 	"github.com/infraboard/mcube/v2/types"
@@ -21,15 +21,13 @@ func NewSecret(in *CreateSecretRequest) *Secret {
 	// 	Vendor Address ApiKey
 	uid := uuid.NewMD5(uuid.Nil, fmt.Appendf(nil, "%d.%s.%s", in.Vendor, in.Address, in.ApiKey)).String()
 	return &Secret{
-		Id:                  uid,
-		UpdateAt:            time.Now().Unix(),
+		Meta:                *model.NewMeta().SetId(uid),
 		CreateSecretRequest: *in,
 	}
 }
 
 type Secret struct {
-	Id                  string `json:"id" bson:"_id"`
-	UpdateAt            int64  `json:"update_at" bson:"update_at"`
+	model.Meta
 	CreateSecretRequest `bson:"inline"`
 }
 
